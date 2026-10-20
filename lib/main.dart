@@ -1,185 +1,242 @@
+
 import 'package:flutter/material.dart';
 import 'widgets/bloco_estatistica.dart';
- 
+
 void main() {
-  runApp(const MeuLayoutApp());
+  runApp(const LayoutApp());
 }
- 
-class MeuLayoutApp extends StatelessWidget {
-  const MeuLayoutApp({super.key});
- 
+
+class LayoutApp extends StatelessWidget {
+  const LayoutApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PPDM - Layout Widgets',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFF2FAF8),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF009688),
+        ),
       ),
-      home: const TelaDashboard(),
+      home: const DashboardPage(),
     );
   }
 }
- 
-class TelaDashboard extends StatelessWidget {
-  const TelaDashboard({super.key});
- 
+
+class DashboardPage extends StatelessWidget {
+  const DashboardPage({super.key});
+
+  static const Color verde = Color(0xFF009688);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF2FAF8),
       appBar: AppBar(
-        title: const Text('PPDM - Dashboard de Observacoes'),
-        centerTitle: true,
-        backgroundColor: Colors.teal,
+        backgroundColor: verde,
         foregroundColor: Colors.white,
+        centerTitle: true,
+        title: const Text('PPDM - Dashboard de Observacoes'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Resumo das Observacoes',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16.0),
- 
-            // Exercicio 08: grade 2x2 com GridView.count
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 1.2,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final espacamento = constraints.maxWidth < 600 ? 10.0 : 16.0;
+
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(espacamento),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                BlocoEstatistica(
-                  icone: Icons.flutter_dash,
-                  valor: '124',
-                  legenda: 'Aves Vistas',
-                  corFundo: Colors.teal.shade100,
+                const SizedBox(height: 4),
+                const Text(
+                  'Resumo das Observacoes',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                BlocoEstatistica(
-                  icone: Icons.place,
-                  valor: '18',
-                  legenda: 'Locais Visitados',
-                  corFundo: Colors.teal.shade50,
-                ),
-                BlocoEstatistica(
-                  icone: Icons.camera_alt,
-                  valor: '45',
-                  legenda: 'Fotos',
-                  corFundo: Colors.teal.shade50,
-                ),
-                BlocoEstatistica(
-                  icone: Icons.calendar_today,
-                  valor: '32',
-                  legenda: 'Dias de Campo',
-                  corFundo: Colors.teal.shade100,
-                ),
-              ],
-            ),
-            const SizedBox(height: 24.0),
- 
-            const Text(
-              'Destaque da Semana',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16.0),
- 
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                // Exercicio 06: Card do Material com elevation
-                SizedBox(
-                  width: double.infinity,
-                  child: Card(
-                    elevation: 4,
-                    margin: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                const SizedBox(height: 18),
+
+                // Quatro blocos: dois em cima e dois embaixo.
+                GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: espacamento,
+                  mainAxisSpacing: espacamento,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  childAspectRatio:
+                      constraints.maxWidth < 600 ? 1.3 : 1.8,
+                  children: const [
+                    BlocoEstatistica(
+                      icone: Icons.flutter_dash,
+                      valor: '124',
+                      legenda: 'Aves Vistas',
+                      cor: Color(0xFFB2DFDB),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.star, size: 48, color: Colors.amber),
-                          const SizedBox(width: 16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text('Gaviao-Real', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                              Text('Avistado no Parque Central', style: TextStyle(color: Colors.grey)),
-                            ],
-                          ),
-                        ],
+                    BlocoEstatistica(
+                      icone: Icons.location_on,
+                      valor: '18',
+                      legenda: 'Locais Visitados',
+                      cor: Color(0xFFE0F2F1),
+                    ),
+                    BlocoEstatistica(
+                      icone: Icons.camera_alt,
+                      valor: '45',
+                      legenda: 'Fotos',
+                      cor: Color(0xFFE0F2F1),
+                    ),
+                    BlocoEstatistica(
+                      icone: Icons.calendar_month,
+                      valor: '32',
+                      legenda: 'Dias de Campo',
+                      cor: Color(0xFFB2DFDB),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 28),
+                const Text(
+                  'Destaque da Semana',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Card com elevacao 4 e selo sobreposto.
+                Card(
+                  elevation: 4,
+                  margin: const EdgeInsets.fromLTRB(2, 4, 2, 12),
+                  color: const Color(0xFFEEF5F2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(20, 22, 20, 38),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.star,
+                              color: Color(0xFFFFC107),
+                              size: 52,
+                            ),
+                            SizedBox(width: 18),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Gaviao-Real',
+                                    style: TextStyle(
+                                      fontSize: 21,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    'Avistado no Parque Central',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        left: 12,
+                        bottom: 0,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Text(
+                            'Confirmado',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Positioned(
-                  top: -8,
-                  right: -8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text(
-                      'Raro',
-                      style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                    ),
+
+                const SizedBox(height: 16),
+                const Text(
+                  'Ultimos Registros',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                // Exercicio 05: segundo selo no canto inferior esquerdo
-                Positioned(
-                  bottom: -8,
-                  left: -8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text(
-                      'Confirmado',
-                      style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                    ),
+                const SizedBox(height: 16),
+
+                // Row com spaceBetween.
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE0F2F1),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Icon(
+                        Icons.list,
+                        color: verde,
+                        size: 26,
+                      ),
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Text(
+                          'Sabia-Laranjeira - hoje',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Exibindo os ultimos registros.'),
+                            ),
+                          );
+                        },
+                        child: const Text('Ver todos'),
+                      ),
+                    ],
                   ),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
-            const SizedBox(height: 24.0),
- 
-            // Exercicio 03: secao Ultimos Registros
-            const Text(
-              'Ultimos Registros',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16.0),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.teal.shade50,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Icon(Icons.list, color: Colors.teal),
-                  const Text('Sabia-Laranjeira - hoje'),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('Ver todos'),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 }
+
